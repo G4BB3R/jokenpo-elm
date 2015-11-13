@@ -11,10 +11,19 @@ type Joken     = Pedra  | Papel    | Tesoura
 type Action    = ActNop | ActMenu  | ActCreditos | ActStart | ActPlay Joken
 
 type alias Model = { state     : GameState
+                   , placar    : { win : Int, lose : Int, draw : Int }
                    , jogada    : Joken
                    , jogada_pc : Joken
                    , seed      : Random.Seed
                    }
+
+model : Model
+model = { state     = Menu
+        , placar    = { win = 0, lose = 0, draw = 0 }
+        , jogada    = Pedra
+        , jogada_pc = Pedra
+        , seed      = initialSeed 31415
+        }
 
 doPieceWin : Joken -> Joken -> Win
 doPieceWin p1 p2 =
@@ -47,12 +56,9 @@ getBtnAttrs joken =
                   Tesoura -> "https://image.freepik.com/fotos-gratis/tesoura_2926575.jpg"
     in  [ width 200, height 200, src url]
 
-model : Model
-model = { state     = Menu
-        , jogada    = Pedra
-        , jogada_pc = Pedra
-        , seed      = initialSeed 31415
-        }
+placar : Model -> Html
+placar model =
+    div [] [ text <| "Wins: " ++ (toString model.placar.win) ++ " Loses: " ++ (toString model.placar.lose) ++ " Draws: " ++ (toString model.placar.draw) ]
 
 view_menu : Address Action -> Model -> Html
 view_menu address model =
@@ -66,7 +72,9 @@ view_menu address model =
 
 view_play : Address Action -> Model -> Html
 view_play address model =
-    div [] [ b [] [text "Faça a sua jogada!"]
+    div [] [ placar model
+           , br [] []
+           , b [] [text "Faça a sua jogada!"]
            , br [] []
            , div [] (List.map (\j -> img (onClick address (ActPlay j) :: getBtnAttrs j) [] ) [Pedra, Papel, Tesoura])
            , br [] []
@@ -82,7 +90,9 @@ view_end address model result =
                 Lose -> "Você perdeu!"
                 Draw -> "Temos um empate!"
     in
-        div [] [ b  [] [ text texto ]
+        div [] [ placar model
+               , br [] []
+               , b  [] [ text texto ]
                , br [] []
                , br [] []
                , div [ style [("display", "inline-block")] ]
@@ -127,7 +137,7 @@ view address model = let
                 End result -> view_end      address model result
     in
     div [ style [("text-align", "center")]]
-        [ h1 [] [ text "JO KEN PO" ]
+        [ h1 [] [ text "JO KEN POx" ]
         , game_div
         ]
 
@@ -135,9 +145,10 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ActNop      -> model
-        ActMenu     -> { model | state <- Menu }
-        ActCreditos -> { model | state <- Creditos }
-        ActStart    -> { model | state <- Play }
+        ActMenu     -> { model | state  <- Menu
+                               , placar <- { win = 0, lose = 0, draw = 0 } }
+        ActCreditos -> { model | state  <- Creditos }
+        ActStart    -> { model | state  <- Play }
         ActPlay minha_jogada ->
           let
               (jogada_raw, seed') = generate (int 1 3) model.seed
@@ -145,6 +156,9 @@ update action model =
               vitoria   = doPieceWin minha_jogada jogada_pc
           in
               { model | state     <- End vitoria
+                      , placar    <- { win  = model.placar.win  + (if vitoria == Won  then 1 else 0)
+                                     , lose = model.placar.lose + (if vitoria == Lose then 1 else 0)
+                                     , draw = model.placar.draw + (if vitoria == Draw then 1 else 0) }
                       , jogada    <- minha_jogada
                       , jogada_pc <- jogada_pc
                       , seed      <- seed' }

@@ -19,6 +19,21 @@ Elm.Main.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp$Simple = Elm.StartApp.Simple.make(_elm);
+   var placar = function (model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([$Html.text(A2($Basics._op["++"],
+      "Wins: ",
+      A2($Basics._op["++"],
+      $Basics.toString(model.placar.win),
+      A2($Basics._op["++"],
+      " Loses: ",
+      A2($Basics._op["++"],
+      $Basics.toString(model.placar.lose),
+      A2($Basics._op["++"],
+      " Draws: ",
+      $Basics.toString(model.placar.draw)))))))]));
+   };
    var getBtnAttrs = function (joken) {
       return function () {
          var url = function () {
@@ -30,21 +45,23 @@ Elm.Main.make = function (_elm) {
                case "Tesoura":
                return "https://image.freepik.com/fotos-gratis/tesoura_2926575.jpg";}
             _U.badCase($moduleName,
-            "between lines 44 and 48");
+            "between lines 53 and 57");
          }();
          return _L.fromArray([$Html$Attributes.width(200)
                              ,$Html$Attributes.height(200)
                              ,$Html$Attributes.src(url)]);
       }();
    };
-   var Model = F4(function (a,
+   var Model = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
-             ,jogada: b
-             ,jogada_pc: c
-             ,seed: d
+             ,jogada: c
+             ,jogada_pc: d
+             ,placar: b
+             ,seed: e
              ,state: a};
    });
    var ActPlay = function (a) {
@@ -89,11 +106,15 @@ Elm.Main.make = function (_elm) {
                case "Won":
                return "Você ganhou!";}
             _U.badCase($moduleName,
-            "between lines 80 and 84");
+            "between lines 88 and 92");
          }();
          return A2($Html.div,
          _L.fromArray([]),
-         _L.fromArray([A2($Html.b,
+         _L.fromArray([placar(model)
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.b,
                       _L.fromArray([]),
                       _L.fromArray([$Html.text(texto)]))
                       ,A2($Html.br,
@@ -195,14 +216,18 @@ Elm.Main.make = function (_elm) {
             case 2: return Papel;
             case 3: return Tesoura;}
          _U.badCase($moduleName,
-         "between lines 37 and 40");
+         "between lines 46 and 49");
       }();
    };
    var view_play = F2(function (address,
    model) {
       return A2($Html.div,
       _L.fromArray([]),
-      _L.fromArray([A2($Html.b,
+      _L.fromArray([placar(model)
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.b,
                    _L.fromArray([]),
                    _L.fromArray([$Html.text("Faça a sua jogada!")]))
                    ,A2($Html.br,
@@ -255,7 +280,7 @@ Elm.Main.make = function (_elm) {
                  address,
                  model);}
             _U.badCase($moduleName,
-            "between lines 123 and 128");
+            "between lines 133 and 138");
          }();
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
@@ -263,7 +288,7 @@ Elm.Main.make = function (_elm) {
                                                             ,_1: "center"}]))]),
          _L.fromArray([A2($Html.h1,
                       _L.fromArray([]),
-                      _L.fromArray([$Html.text("JO KEN PO")]))
+                      _L.fromArray([$Html.text("JO KEN POx")]))
                       ,game_div]));
       }();
    });
@@ -276,6 +301,10 @@ Elm.Main.make = function (_elm) {
    var model = {_: {}
                ,jogada: Pedra
                ,jogada_pc: Pedra
+               ,placar: {_: {}
+                        ,draw: 0
+                        ,lose: 0
+                        ,win: 0}
                ,seed: $Random.initialSeed(31415)
                ,state: Menu};
    var Won = {ctor: "Won"};
@@ -292,7 +321,7 @@ Elm.Main.make = function (_elm) {
                     case "Pedra": return Won;
                     case "Tesoura": return Lose;}
                  _U.badCase($moduleName,
-                 "between lines 26 and 30");
+                 "between lines 35 and 39");
               }();
             case "Pedra":
             return function () {
@@ -301,7 +330,7 @@ Elm.Main.make = function (_elm) {
                     case "Pedra": return Draw;
                     case "Tesoura": return Won;}
                  _U.badCase($moduleName,
-                 "between lines 22 and 26");
+                 "between lines 31 and 35");
               }();
             case "Tesoura":
             return function () {
@@ -310,10 +339,10 @@ Elm.Main.make = function (_elm) {
                     case "Pedra": return Lose;
                     case "Tesoura": return Draw;}
                  _U.badCase($moduleName,
-                 "between lines 30 and 33");
+                 "between lines 39 and 42");
               }();}
          _U.badCase($moduleName,
-         "between lines 21 and 33");
+         "between lines 30 and 42");
       }();
    });
    var update = F2(function (action,
@@ -326,7 +355,12 @@ Elm.Main.make = function (_elm) {
               model);
             case "ActMenu":
             return _U.replace([["state"
-                               ,Menu]],
+                               ,Menu]
+                              ,["placar"
+                               ,{_: {}
+                                ,draw: 0
+                                ,lose: 0
+                                ,win: 0}]],
               model);
             case "ActNop": return model;
             case "ActPlay":
@@ -342,6 +376,14 @@ Elm.Main.make = function (_elm) {
                  jogada_pc);
                  return _U.replace([["state"
                                     ,End(vitoria)]
+                                   ,["placar"
+                                    ,{_: {}
+                                     ,draw: model.placar.draw + (_U.eq(vitoria,
+                                     Draw) ? 1 : 0)
+                                     ,lose: model.placar.lose + (_U.eq(vitoria,
+                                     Lose) ? 1 : 0)
+                                     ,win: model.placar.win + (_U.eq(vitoria,
+                                     Won) ? 1 : 0)}]
                                    ,["jogada",action._0]
                                    ,["jogada_pc",jogada_pc]
                                    ,["seed",seed$]],
@@ -352,7 +394,7 @@ Elm.Main.make = function (_elm) {
                                ,Play]],
               model);}
          _U.badCase($moduleName,
-         "between lines 136 and 150");
+         "between lines 146 and 164");
       }();
    });
    var main = $StartApp$Simple.start({_: {}
@@ -376,10 +418,11 @@ Elm.Main.make = function (_elm) {
                       ,ActStart: ActStart
                       ,ActPlay: ActPlay
                       ,Model: Model
+                      ,model: model
                       ,doPieceWin: doPieceWin
                       ,getPieceById: getPieceById
                       ,getBtnAttrs: getBtnAttrs
-                      ,model: model
+                      ,placar: placar
                       ,view_menu: view_menu
                       ,view_play: view_play
                       ,view_end: view_end
