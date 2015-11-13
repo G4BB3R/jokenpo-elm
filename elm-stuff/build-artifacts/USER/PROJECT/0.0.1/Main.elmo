@@ -1,0 +1,391 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Main",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Random = Elm.Random.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp$Simple = Elm.StartApp.Simple.make(_elm);
+   var getBtnAttrs = function (joken) {
+      return function () {
+         var url = function () {
+            switch (joken.ctor)
+            {case "Papel":
+               return "http://www.print-class.com/imagenes/contenido/originales/papel-sublimacion.jpg";
+               case "Pedra":
+               return "http://1.bp.blogspot.com/-I_CrWXZrXK8/UbRyoN8kHAI/AAAAAAABSas/zjAgLoyHzW0/s1600/pedra.jpg";
+               case "Tesoura":
+               return "https://image.freepik.com/fotos-gratis/tesoura_2926575.jpg";}
+            _U.badCase($moduleName,
+            "between lines 44 and 48");
+         }();
+         return _L.fromArray([$Html$Attributes.width(200)
+                             ,$Html$Attributes.height(200)
+                             ,$Html$Attributes.src(url)]);
+      }();
+   };
+   var Model = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,jogada: b
+             ,jogada_pc: c
+             ,seed: d
+             ,state: a};
+   });
+   var ActPlay = function (a) {
+      return {ctor: "ActPlay"
+             ,_0: a};
+   };
+   var ActStart = {ctor: "ActStart"};
+   var ActCreditos = {ctor: "ActCreditos"};
+   var view_menu = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([$Html.text("[TODO] Aqui vai uma pequena explicação de como jogar")
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   ActStart)]),
+                   _L.fromArray([$Html.text("Jogar")]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   ActCreditos)]),
+                   _L.fromArray([$Html.text("Créditos")]))]));
+   });
+   var ActMenu = {ctor: "ActMenu"};
+   var view_end = F3(function (address,
+   model,
+   result) {
+      return function () {
+         var texto = function () {
+            switch (result.ctor)
+            {case "Draw":
+               return "Temos um empate!";
+               case "Lose":
+               return "Você perdeu!";
+               case "Won":
+               return "Você ganhou!";}
+            _U.badCase($moduleName,
+            "between lines 80 and 84");
+         }();
+         return A2($Html.div,
+         _L.fromArray([]),
+         _L.fromArray([A2($Html.b,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text(texto)]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                         ,_0: "display"
+                                                                         ,_1: "inline-block"}]))]),
+                      _L.fromArray([$Html.text("Você:")
+                                   ,A2($Html.br,
+                                   _L.fromArray([]),
+                                   _L.fromArray([]))
+                                   ,A2($Html.img,
+                                   getBtnAttrs(model.jogada),
+                                   _L.fromArray([]))]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                         ,_0: "display"
+                                                                         ,_1: "inline-block"}]))]),
+                      _L.fromArray([$Html.text("Oponente:")
+                                   ,A2($Html.br,
+                                   _L.fromArray([]),
+                                   _L.fromArray([]))
+                                   ,A2($Html.img,
+                                   getBtnAttrs(model.jogada_pc),
+                                   _L.fromArray([]))]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.button,
+                      _L.fromArray([A2($Html$Events.onClick,
+                      address,
+                      ActMenu)]),
+                      _L.fromArray([$Html.text("Back to menu")]))
+                      ,A2($Html.button,
+                      _L.fromArray([A2($Html$Events.onClick,
+                      address,
+                      ActStart)]),
+                      _L.fromArray([$Html.text("Play again")]))]));
+      }();
+   });
+   var view_creditos = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([$Html.text("Feito por mim, Gabriel Torrecillas Sartori")
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,$Html.text("Apenas um jogo simples pra praticar a linguagem de programação ")
+                   ,A2($Html.a,
+                   _L.fromArray([$Html$Attributes.href("http://elm-lang.org")
+                                ,A2($Html$Attributes.attribute,
+                                "target",
+                                "_blank")]),
+                   _L.fromArray([$Html.text("Elm")]))
+                   ,$Html.text(",")
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,$Html.text("que compila para Html/CSS/Js :)")
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.img,
+                   _L.fromArray([$Html$Attributes.width(250)
+                                ,$Html$Attributes.src("https://i.imgur.com/Sex1E8m.jpg")]),
+                   _L.fromArray([]))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   ActMenu)]),
+                   _L.fromArray([$Html.text("Back")]))]));
+   });
+   var ActNop = {ctor: "ActNop"};
+   var Tesoura = {ctor: "Tesoura"};
+   var Papel = {ctor: "Papel"};
+   var Pedra = {ctor: "Pedra"};
+   var getPieceById = function (id) {
+      return function () {
+         switch (id)
+         {case 1: return Pedra;
+            case 2: return Papel;
+            case 3: return Tesoura;}
+         _U.badCase($moduleName,
+         "between lines 37 and 40");
+      }();
+   };
+   var view_play = F2(function (address,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.b,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text("Faça a sua jogada!")]))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.div,
+                   _L.fromArray([]),
+                   A2($List.map,
+                   function (j) {
+                      return A2($Html.img,
+                      A2($List._op["::"],
+                      A2($Html$Events.onClick,
+                      address,
+                      ActPlay(j)),
+                      getBtnAttrs(j)),
+                      _L.fromArray([]));
+                   },
+                   _L.fromArray([Pedra
+                                ,Papel
+                                ,Tesoura])))
+                   ,A2($Html.br,
+                   _L.fromArray([]),
+                   _L.fromArray([]))
+                   ,A2($Html.button,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   address,
+                   ActMenu)]),
+                   _L.fromArray([$Html.text("Menu")]))]));
+   });
+   var view = F2(function (address,
+   model) {
+      return function () {
+         var game_div = function () {
+            var _v3 = model.state;
+            switch (_v3.ctor)
+            {case "Creditos":
+               return A2(view_creditos,
+                 address,
+                 model);
+               case "End": return A3(view_end,
+                 address,
+                 model,
+                 _v3._0);
+               case "Menu":
+               return A2(view_menu,
+                 address,
+                 model);
+               case "Play":
+               return A2(view_play,
+                 address,
+                 model);}
+            _U.badCase($moduleName,
+            "between lines 123 and 128");
+         }();
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                            ,_0: "text-align"
+                                                            ,_1: "center"}]))]),
+         _L.fromArray([A2($Html.h1,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("JO KEN PO")]))
+                      ,game_div]));
+      }();
+   });
+   var End = function (a) {
+      return {ctor: "End",_0: a};
+   };
+   var Play = {ctor: "Play"};
+   var Creditos = {ctor: "Creditos"};
+   var Menu = {ctor: "Menu"};
+   var model = {_: {}
+               ,jogada: Pedra
+               ,jogada_pc: Pedra
+               ,seed: $Random.initialSeed(31415)
+               ,state: Menu};
+   var Won = {ctor: "Won"};
+   var Lose = {ctor: "Lose"};
+   var Draw = {ctor: "Draw"};
+   var doPieceWin = F2(function (p1,
+   p2) {
+      return function () {
+         switch (p1.ctor)
+         {case "Papel":
+            return function () {
+                 switch (p2.ctor)
+                 {case "Papel": return Draw;
+                    case "Pedra": return Won;
+                    case "Tesoura": return Lose;}
+                 _U.badCase($moduleName,
+                 "between lines 26 and 30");
+              }();
+            case "Pedra":
+            return function () {
+                 switch (p2.ctor)
+                 {case "Papel": return Lose;
+                    case "Pedra": return Draw;
+                    case "Tesoura": return Won;}
+                 _U.badCase($moduleName,
+                 "between lines 22 and 26");
+              }();
+            case "Tesoura":
+            return function () {
+                 switch (p2.ctor)
+                 {case "Papel": return Won;
+                    case "Pedra": return Lose;
+                    case "Tesoura": return Draw;}
+                 _U.badCase($moduleName,
+                 "between lines 30 and 33");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 21 and 33");
+      }();
+   });
+   var update = F2(function (action,
+   model) {
+      return function () {
+         switch (action.ctor)
+         {case "ActCreditos":
+            return _U.replace([["state"
+                               ,Creditos]],
+              model);
+            case "ActMenu":
+            return _U.replace([["state"
+                               ,Menu]],
+              model);
+            case "ActNop": return model;
+            case "ActPlay":
+            return function () {
+                 var $ = A2($Random.generate,
+                 A2($Random.$int,1,3),
+                 model.seed),
+                 jogada_raw = $._0,
+                 seed$ = $._1;
+                 var jogada_pc = getPieceById(jogada_raw);
+                 var vitoria = A2(doPieceWin,
+                 action._0,
+                 jogada_pc);
+                 return _U.replace([["state"
+                                    ,End(vitoria)]
+                                   ,["jogada",action._0]
+                                   ,["jogada_pc",jogada_pc]
+                                   ,["seed",seed$]],
+                 model);
+              }();
+            case "ActStart":
+            return _U.replace([["state"
+                               ,Play]],
+              model);}
+         _U.badCase($moduleName,
+         "between lines 136 and 150");
+      }();
+   });
+   var main = $StartApp$Simple.start({_: {}
+                                     ,model: model
+                                     ,update: update
+                                     ,view: view});
+   _elm.Main.values = {_op: _op
+                      ,Draw: Draw
+                      ,Lose: Lose
+                      ,Won: Won
+                      ,Menu: Menu
+                      ,Creditos: Creditos
+                      ,Play: Play
+                      ,End: End
+                      ,Pedra: Pedra
+                      ,Papel: Papel
+                      ,Tesoura: Tesoura
+                      ,ActNop: ActNop
+                      ,ActMenu: ActMenu
+                      ,ActCreditos: ActCreditos
+                      ,ActStart: ActStart
+                      ,ActPlay: ActPlay
+                      ,Model: Model
+                      ,doPieceWin: doPieceWin
+                      ,getPieceById: getPieceById
+                      ,getBtnAttrs: getBtnAttrs
+                      ,model: model
+                      ,view_menu: view_menu
+                      ,view_play: view_play
+                      ,view_end: view_end
+                      ,view_creditos: view_creditos
+                      ,view: view
+                      ,update: update
+                      ,main: main};
+   return _elm.Main.values;
+};
