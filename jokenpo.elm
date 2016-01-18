@@ -46,7 +46,7 @@ getPieceById id =
     case id of
         1 -> Pedra
         2 -> Papel
-        3 -> Tesoura
+        _ -> Tesoura
 
 getBtnAttrs : Joken -> List Attribute
 getBtnAttrs joken =
@@ -137,7 +137,7 @@ view address model = let
                 End result -> view_end      address model result
     in
     div [ style [("text-align", "center")]]
-        [ h1 [] [ text "JO KEN POx" ]
+        [ h1 [] [ text "JO KEN PO" ]
         , game_div
         ]
 
@@ -145,23 +145,23 @@ update : Action -> Model -> Model
 update action model =
     case action of
         ActNop      -> model
-        ActMenu     -> { model | state  <- Menu
-                               , placar <- { win = 0, lose = 0, draw = 0 } }
-        ActCreditos -> { model | state  <- Creditos }
-        ActStart    -> { model | state  <- Play }
+        ActMenu     -> { model | state  = Menu
+                               , placar = { win = 0, lose = 0, draw = 0 } }
+        ActCreditos -> { model | state  = Creditos }
+        ActStart    -> { model | state  = Play }
         ActPlay minha_jogada ->
           let
               (jogada_raw, seed') = generate (int 1 3) model.seed
               jogada_pc = getPieceById jogada_raw
               vitoria   = doPieceWin minha_jogada jogada_pc
           in
-              { model | state     <- End vitoria
-                      , placar    <- { win  = model.placar.win  + (if vitoria == Won  then 1 else 0)
+              { model | state     = End vitoria
+                      , placar    = { win  = model.placar.win  + (if vitoria == Won  then 1 else 0)
                                      , lose = model.placar.lose + (if vitoria == Lose then 1 else 0)
                                      , draw = model.placar.draw + (if vitoria == Draw then 1 else 0) }
-                      , jogada    <- minha_jogada
-                      , jogada_pc <- jogada_pc
-                      , seed      <- seed' }
+                      , jogada    = minha_jogada
+                      , jogada_pc = jogada_pc
+                      , seed      = seed' }
 
 main : Signal Html
 main =
